@@ -1,0 +1,48 @@
+{
+    "name": "danizord/mid",
+    "description": "Functional utility on top of PSR-15 interfaces",
+    "license": "MIT",
+    "keywords": [
+        "psr-15",
+        "middleware",
+        "request-handler",
+        "http",
+        "php"
+    ],
+    "require": {
+        "php": "^7.1",
+        "http-interop/http-middleware": "^0.4 || ^0.5",
+        "psr/http-message": "^1.0",
+        "webimpress/http-middleware-compatibility": "^0.1.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.3",
+        "zendframework/zend-coding-standard": "~1.0.0",
+        "zendframework/zend-diactoros": "^1.6"
+    },
+    "autoload": {
+        "files": ["src/mid.php"],
+        "psr-4": {
+            "mid\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "midTest\\": "test/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
+        "upload-coverage": "coveralls -v"
+    }
+}
