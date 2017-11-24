@@ -20,7 +20,7 @@ use function mid\pipeline;
 class MidTest extends TestCase
 {
     /**
-     * @covers lazyMiddleware()
+     * @covers \mid\lazyMiddleware()
      */
     public function testLazyMiddleware()
     {
@@ -44,7 +44,7 @@ class MidTest extends TestCase
     }
 
     /**
-     * @covers pipeline()
+     * @covers \mid\pipeline()
      */
     public function testPipelineWithMiddlewares()
     {
@@ -65,7 +65,7 @@ class MidTest extends TestCase
     }
 
     /**
-     * @covers pipeline()
+     * @covers \mid\pipeline()
      */
     public function testEmptyPipeline()
     {
@@ -79,7 +79,7 @@ class MidTest extends TestCase
     }
 
     /**
-     * @covers middlewareToHandler()
+     * @covers \mid\middlewareToHandler()
      */
     public function testMiddlewareToHandler()
     {
@@ -93,7 +93,7 @@ class MidTest extends TestCase
     }
 
     /**
-     * @covers middlewareToHandler()
+     * @covers \mid\middlewareToHandler()
      */
     public function testMiddlewareToHandlerThrowsExceptionIfWrappedMiddlewareCallsNextHandler()
     {
@@ -105,7 +105,7 @@ class MidTest extends TestCase
     }
 
     /**
-     * @covers handlerToMiddleware()
+     * @covers \mid\handlerToMiddleware()
      */
     public function testHandlerToMiddleware()
     {
@@ -121,7 +121,7 @@ class MidTest extends TestCase
     }
 
     /**
-     * @covers middleware()
+     * @covers \mid\middleware()
      */
     public function testMiddleware()
     {
@@ -135,7 +135,7 @@ class MidTest extends TestCase
     }
 
     /**
-     * @covers handler()
+     * @covers \mid\handler()
      */
     public function testHandler()
     {
