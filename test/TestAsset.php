@@ -2,12 +2,12 @@
 
 namespace MidTest;
 
-use Webimpress\HttpMiddlewareCompatibility\MiddlewareInterface;
-use Webimpress\HttpMiddlewareCompatibility\HandlerInterface as RequestHandlerInterface;
-use function mid\handler;
-use function mid\middleware;
+use Interop\Http\Server\MiddlewareInterface;
+use Interop\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
+use function mid\handler;
+use function mid\middleware;
 
 /**
  * @author Daniel Gimenes

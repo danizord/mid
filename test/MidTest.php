@@ -10,7 +10,6 @@ use Zend\Diactoros\ServerRequest;
 use function mid\handler;
 use function mid\handlerToMiddleware;
 use function mid\lazyMiddleware;
-use function mid\middleware;
 use function mid\middlewareToHandler;
 use function mid\pipeline;
 

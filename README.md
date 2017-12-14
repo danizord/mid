@@ -20,12 +20,3 @@ Coming soon...
 
 For now you can check [mid.php](src/mid.php). Each function has a docblock containing description
 and usage examples.
-
-## PSR-15 draft version support
-
-The 0.1 version of this library supports both http-interop/http-middleware ^0.4 and
-http-interop/http-middleware ^0.5, but the `MiddlewarePipeline` class and `pipeline()` function
-is only supported by http-interop/http-middleware ^0.5.
-
-The support for http-interop/http-server-middleware and http-interop/http-server-handler 1.0 will
-be shipped as soon as Zend\Expressive starts supporting it.

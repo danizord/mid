@@ -7,48 +7,40 @@ use Interop\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
-use const Webimpress\HttpMiddlewareCompatibility\HANDLER_METHOD;
 
 /**
- * In http-interop/http-middleware ^0.4, both middleware and handler interfaces define a method process,
- * so this implementation can' support it since it implements both interfaces. Therefore, it requires
- * http-interop/http-middleware ^0.5
+ * @author Daniel Gimenes
  */
-if ('handle' === HANDLER_METHOD) {
+final class MiddlewarePipeline implements RequestHandlerInterface, MiddlewareInterface
+{
     /**
-     * @author Daniel Gimenes
+     * @var MiddlewareInterface[]
      */
-    final class MiddlewarePipeline implements RequestHandlerInterface, MiddlewareInterface
+    private $middlewares;
+
+    public function pipe(MiddlewareInterface $middleware): void
     {
-        /**
-         * @var MiddlewareInterface[]
-         */
-        private $middlewares;
+        $this->middlewares[] = $middleware;
+    }
 
-        public function pipe(MiddlewareInterface $middleware): void
-        {
-            $this->middlewares[] = $middleware;
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $nextHandler = clone $this;
+
+        $nextHandler->middlewares[] = handlerToMiddleware($handler);
+
+        return $nextHandler->handle($request);
+    }
+
+    public function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        if (empty($this->middlewares)) {
+            throw new RuntimeException('The request reached the end of middleware pipeline without a response');
         }
 
-        public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
-        {
-            $nextHandler = clone $this;
+        $nextHandler = clone $this;
+        $middleware  = array_shift($nextHandler->middlewares);
 
-            $nextHandler->middlewares[] = handlerToMiddleware($handler);
-
-            return $nextHandler->handle($request);
-        }
-
-        public function handle(ServerRequestInterface $request): ResponseInterface
-        {
-            if (empty($this->middlewares)) {
-                throw new RuntimeException('The request reached the end of middleware pipeline without a response');
-            }
-
-            $nextHandler = clone $this;
-            $middleware  = array_shift($nextHandler->middlewares);
-
-            return $middleware->process($request, $nextHandler);
-        }
+        return $middleware->process($request, $nextHandler);
     }
 }
