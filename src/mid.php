@@ -2,12 +2,11 @@
 
 namespace mid;
 
+use Interop\Http\Server\MiddlewareInterface as Middleware;
+use Interop\Http\Server\RequestHandlerInterface as Handler;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use RuntimeException;
-use Webimpress\HttpMiddlewareCompatibility\MiddlewareInterface as Middleware;
-use Webimpress\HttpMiddlewareCompatibility\HandlerInterface as Handler;
-use const Webimpress\HttpMiddlewareCompatibility\HANDLER_METHOD;
 
 /**
  * Takes a callable middleware factory and returns a lazy middleware that calls the factory internally to instantiate
@@ -105,7 +104,7 @@ function middlewareToHandler(Middleware $middleware): Handler
 function handlerToMiddleware(Handler $handler): Middleware
 {
     return middleware(function (Request $request) use ($handler) {
-        return $handler->{HANDLER_METHOD}($request);
+        return $handler->handle($request);
     });
 }
 
@@ -159,12 +158,6 @@ function handler(callable $fn): Handler
         public function handle(Request $request): Response
         {
             return ($this->fn)($request);
-        }
-
-        // For BC with http-interop/http-middleware ^0.4
-        public function process(Request $request): Response
-        {
-            return $this->handle($request);
         }
     };
 }

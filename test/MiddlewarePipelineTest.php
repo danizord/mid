@@ -13,13 +13,6 @@ use function mid\handlerToMiddleware;
  */
 final class MiddlewarePipelineTest extends TestCase
 {
-    protected function setUp()
-    {
-        if (! class_exists(MiddlewarePipeline::class)) {
-            $this->markTestSkipped('MiddlewarePipeline is only supported with http-interop/http-middleware ^0.5');
-        }
-    }
-
     public function testCanBeUsedAndReusedAsMiddleware()
     {
         $pipeline = new MiddlewarePipeline();

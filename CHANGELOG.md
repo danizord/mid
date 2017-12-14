@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.2.0
+
+### Added
+
+- Support for http-interop/http-server-middleware and http-interop/http-server-handler
+
+### Changed
+
+- Nothing.
+
+### Deprecated
+
+- Nothing.
+
+### Removed
+
+- [BC Break] Support for http-interop/http-middleware
+
+### Fixed
+
+- Nothing.
+
 ## 0.1.0
 
 ### Added
