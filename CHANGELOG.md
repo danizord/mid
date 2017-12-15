@@ -5,6 +5,8 @@
 ### Added
 
 - Support for http-interop/http-server-middleware and http-interop/http-server-handler
+- `path()` utility function that decorates a middleware and only runs it if the incoming
+request URI matches the required given path prefix.
 
 ### Changed
 

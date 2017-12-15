@@ -9,6 +9,39 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use RuntimeException;
 
 /**
+ * Decorates the given middleware and process it only if the incoming request URI has the required prefix.
+ *
+ * Example:
+ *
+ *     $pipeline = pipeline();
+ *
+ *     $pipeline->pipe($cors);
+ *     $pipeline->pipe(path('/api', $authentication));
+ *
+ * While $cors will run for every request, $authentication will run only for requests under `/api` URI prefix.
+ *
+ */
+function path(string $prefix, Middleware $middleware): Middleware
+{
+    if ('/' === $prefix || '' === $prefix) {
+        return $middleware;
+    }
+
+    return middleware(function (Request $request, Handler $handler) use ($prefix, $middleware) {
+        $prefix = strtolower(rtrim($prefix, '/'));
+        $path   = strtolower($request->getUri()->getPath());
+
+        // Skip if current url does not have required prefix
+        if (substr($path, 0, strlen($prefix)) !== $prefix) {
+            return $handler->handle($request);
+        }
+
+        // Otherwise process decorated middleware
+        return $middleware->process($request, $handler);
+    });
+}
+
+/**
  * Takes a callable middleware factory and returns a lazy middleware that calls the factory internally to instantiate
  * the actual middleware only when it is going to be processed.
  *

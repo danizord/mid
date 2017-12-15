@@ -3,6 +3,7 @@
 namespace midTest;
 
 use mid\MiddlewarePipeline;
+use function mid\path;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Zend\Diactoros\Response;
@@ -12,12 +13,58 @@ use function mid\handlerToMiddleware;
 use function mid\lazyMiddleware;
 use function mid\middlewareToHandler;
 use function mid\pipeline;
+use Zend\Diactoros\Uri;
 
 /**
  * @author Daniel Gimenes
  */
 class MidTest extends TestCase
 {
+    /**
+     * @dataProvider providePaths
+     * @covers \mid\path()
+     */
+    public function testPath(string $path, int $expectedCount)
+    {
+        $pipeline = pipeline([
+            // +3 for every request
+            TestAsset::counter(),
+            path('/', TestAsset::counter()),
+            path('', TestAsset::counter()),
+
+            // +1 only for /foo
+            path('/foo', TestAsset::counter()),
+
+            // +2 only for /foo/bar
+            path('/foo/bar', TestAsset::counter()),
+            path('/foo/bar/', TestAsset::counter()),
+        ]);
+
+        $request  = (new ServerRequest())->withUri((new Uri())->withPath($path));
+        $response = $pipeline->process($request, TestAsset::responder());
+
+        $this->assertSame((string) $expectedCount, (string) $response->getBody());
+    }
+
+    public function providePaths(): array
+    {
+        return [
+            ['', 3],
+            ['/', 3],
+            ['/test', 3],
+            ['/test/', 3],
+
+            ['/foo', 4],
+            ['/foo/', 4],
+            ['/foo/test', 4],
+
+            ['/foo/bar', 6],
+            ['/foo/bar/', 6],
+            ['/foo/bar/test', 6],
+            ['/foo/bar/test/', 6],
+        ];
+    }
+
     /**
      * @covers \mid\lazyMiddleware()
      */
